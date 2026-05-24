@@ -30,14 +30,14 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="w-full border border-[#1E90FF] rounded-xl bg-[#111111] px-4 md:px-6 py-3">
+        <nav className="w-full  rounded-xl bg-[#111111] px-4 md:px-6 py-3">
 
             <div className="flex items-center justify-between">
 
                 {/* Logo */}
                 <Link
                     href="/"
-                    className="flex items-center gap-2 border border-dashed border-[#1E90FF] px-2 py-1 rounded-md"
+                    className="flex items-center gap-2  px-2 py-1 rounded-md"
                 >
                     <div className="w-9 h-9 rounded-md bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
                         <Code className="text-white w-5 h-5" />
@@ -45,17 +45,17 @@ const Navbar = () => {
 
                     <div className="leading-[1]">
                         <h2 className="text-white text-[18px] font-semibold">
-                            Programming
+                            Hiring
                         </h2>
 
                         <p className="text-white text-[15px] font-medium">
-                            Hero
+                            Loop
                         </p>
                     </div>
                 </Link>
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex items-center gap-8 border border-dashed border-[#1E90FF] px-8 py-4 rounded-md">
+                <div className="hidden md:flex items-center gap-8 bg-[#222222] px-8 py-4 rounded-md">
 
                     {navLinks.map((link) => (
                         <Link
