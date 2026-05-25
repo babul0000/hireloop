@@ -76,6 +76,12 @@ const Navbar = () => {
                     >
                         Sign In
                     </Link>
+                    <Link
+                        href="/signup"
+                        className="text-[#7C3AED] text-sm font-medium hover:text-purple-400 transition"
+                    >
+                        Sign Up
+                    </Link>
 
                     <Button
                         radius="md"
@@ -125,6 +131,13 @@ const Navbar = () => {
                         >
                             Sign In
                         </Link>
+                        {/* <Link
+                            href="/signUp"
+                            className="block text-[#7C3AED] font-medium hover:text-purple-400 transition"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Sign Up
+                        </Link> */}
 
                         <Button
                             radius="md"
