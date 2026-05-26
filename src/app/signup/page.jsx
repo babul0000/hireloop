@@ -208,10 +208,10 @@ export default function SignUpPage() {
                 <p className="mt-6 text-center text-sm text-gray-400">
                     Already have an account?
                     <Link
-                        href="/login"
+                        href="/signin"
                         className="ml-1 text-cyan-400 hover:underline"
                     >
-                        Login
+                        Sign in
                     </Link>
                 </p>
             </div>
