@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Button } from "@heroui/react";
+import { Button, Avatar } from "@heroui/react";
 
 import {
     Code,
     Bars,
     Xmark,
 } from "@gravity-ui/icons";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
     {
@@ -26,8 +28,26 @@ const navLinks = [
 ];
 
 const Navbar = () => {
+    const router = useRouter();
+
 
     const [isOpen, setIsOpen] = useState(false);
+
+    const { data: session } = authClient.useSession();
+    const user = session?.user;
+    console.log(user);
+
+    const handleSignOut = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    router.push("/");
+                }
+            }
+        });
+    };
+
+
 
     return (
         <nav className="w-full  rounded-xl bg-[#111111] px-4 md:px-6 py-3">
@@ -70,18 +90,43 @@ const Navbar = () => {
                     {/* Divider */}
                     <div className="w-[1px] h-5 bg-gray-600" />
 
-                    <Link
-                        href="/signin"
-                        className="text-[#7C3AED] text-sm font-medium hover:text-purple-400 transition"
-                    >
-                        Sign In
-                    </Link>
-                    <Link
-                        href="/signup"
-                        className="text-[#7C3AED] text-sm font-medium hover:text-purple-400 transition"
-                    >
-                        Sign Up
-                    </Link>
+                    {
+                        user ? (
+                            <div className="flex items-center gap-3">
+
+                                {/* Avatar */}
+                                <Avatar className="h-11 w-11 border border-white/10">
+                                    <Avatar.Image
+                                        alt={user?.name}
+                                        src={
+                                            user?.image ||
+                                            "https://img.heroui.chat/image/avatar?w=400&h=400&u=3"
+                                        }
+                                    />
+
+                                    <Avatar.Fallback>
+                                        {user?.name?.slice(0, 2).toUpperCase()}
+                                    </Avatar.Fallback>
+                                </Avatar>
+
+                                {/* Sign Out Button */}
+                                <Button
+                                    onClick={handleSignOut}
+                                    variant="danger"
+                                    className="rounded-xl"
+                                >
+                                    Sign Out
+                                </Button>
+                            </div>
+                        ) : (
+                            <Link
+                                href="/signin"
+                                className="text-sm font-medium text-[#7C3AED] transition hover:text-purple-400"
+                            >
+                                Sign In
+                            </Link>
+                        )
+                    }
 
                     <Button
                         radius="md"
@@ -131,13 +176,6 @@ const Navbar = () => {
                         >
                             Sign In
                         </Link>
-                        {/* <Link
-                            href="/signUp"
-                            className="block text-[#7C3AED] font-medium hover:text-purple-400 transition"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            Sign Up
-                        </Link> */}
 
                         <Button
                             radius="md"
