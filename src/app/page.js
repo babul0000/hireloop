@@ -1,6 +1,7 @@
 import FeaturesGrid from "@/components/FeaturesGrid";
 import HeroBanner from "@/components/HeroBanner";
 import JobDiscoverySection from "@/components/JobDiscoverySection";
+import PricingSection from "@/components/PricingSection";
 
 
 export default function Home() {
@@ -9,6 +10,7 @@ export default function Home() {
       <HeroBanner/>
       <JobDiscoverySection/>
       <FeaturesGrid/>
+      <PricingSection/>
     </div>
   );
 }
