@@ -150,7 +150,8 @@ export default function JobDiscoverySection() {
           radius="lg"
           className="bg-white text-black hover:bg-gray-200 font-medium px-7 py-6 text-sm rounded-2xl"
         >
-          View all job openings
+          View all job openings   
+          
         </Button>
       </div>
     </section>
