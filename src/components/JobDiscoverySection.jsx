@@ -74,7 +74,7 @@ export default function JobDiscoverySection() {
         </div>
 
         <h2 className="text-4xl md:text-6xl font-semibold leading-tight">
-          The roles you d never <br /> find by searching
+          The roles you'd never <br /> find by searching
         </h2>
 
         <p className="text-gray-400 mt-5 text-sm md:text-base">
