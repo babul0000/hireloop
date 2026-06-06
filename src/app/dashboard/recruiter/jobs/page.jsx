@@ -4,10 +4,16 @@ import { Table, Chip, Button, Tooltip } from "@heroui/react";
 
 // Gravity UI Icons
 import { Eye, Pencil, TrashBin } from "@gravity-ui/icons";
+import { getLoggedInRecruiterCompany } from '@/lib/api/companise';
 
 const RecruiterJobs = async () => {
-    const companyId = 'company_123';
-    const jobs = await getCompanyJobs(companyId) || [];
+    // const companyId = 'company_123';
+    const company = await getLoggedInRecruiterCompany();
+    console.log(company, "company data")
+
+    const jobs = await getCompanyJobs(company) || [];
+    
+    console.log(jobs, "jobs data")
 
     // Helper to determine status chip coloring
     const getStatusColor = (status) => {

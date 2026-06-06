@@ -22,5 +22,14 @@ export const getCompanyJobs = async (companyId, status = 'active') => {
         const text = await res.text().catch(() => '');
         throw new Error(`Failed to fetch jobs (${res.status}): ${text}`);
     }
-    return res.json();
+    // Unexpected end of JSON input guard
+    const text = await res.text();
+    if (!text) {
+        return [];
+    }
+    try {
+        return JSON.parse(text);
+    } catch {
+        return [];
+    }
 }
