@@ -9,9 +9,9 @@ import { getLoggedInRecruiterCompany } from '@/lib/api/companise';
 const RecruiterJobs = async () => {
     // const companyId = 'company_123';
     const company = await getLoggedInRecruiterCompany();
-    console.log(company, "company data")
+    console.log(company, "testing company data")
 
-    const jobs = await getCompanyJobs(company) || [];
+    const jobs = await getCompanyJobs(company._id) || [];
     
     console.log(jobs, "jobs data")
 
