@@ -1,18 +1,24 @@
 'use server';
 
-const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+import { serverMutation } from "./core/server";
 
 export const createJobs = async (newJobsData) => {
+    return serverMutation('/jobs', newJobsData);
+}
 
-    const res = await fetch(`${baseUrl}/jobs`, {
-        method: "POST",
+// const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
-        headers: {
-            "content-type": "application/json",
-        },
+// export const createJobs = async (newJobsData) => {
 
-        body: JSON.stringify(newJobsData),
-    });
+//     const res = await fetch(`${baseUrl}/jobs`, {
+//         method: "POST",
 
-    return res.json();
-};
+//         headers: {
+//             "content-type": "application/json",
+//         },
+
+//         body: JSON.stringify(newJobsData),
+//     });
+
+//     return res.json();
+// };

@@ -1,0 +1,26 @@
+// import { serverFetch } from "../core/server";
+
+const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+
+// export const getJobs = async () =>{
+//     return serverFetch('/api/jobs');
+// }
+
+// export const getJobById = async (jobId) => {
+//     return serverFetch(`/api/jobs/${jobId}`);
+// }
+
+export const getCompanyJobs = async (companyId, status = 'active') => {
+    const resolvedBaseUrl = baseUrl;
+    if (!resolvedBaseUrl) {
+        throw new Error('Missing NEXT_PUBLIC_SERVER_URL for jobs API');
+    }
+
+    // Backend এ route হলো: GET /jobs (না যে /api/jobs)
+    const res = await fetch(`${resolvedBaseUrl}/jobs?companyId=${companyId}&status=${status}`);
+    if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        throw new Error(`Failed to fetch jobs (${res.status}): ${text}`);
+    }
+    return res.json();
+}

@@ -1,34 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-    Form,
-    Fieldset,
-    TextField,
-    Label,
-    Input,
-    TextArea,
-    FieldError,
-    Select,
-    ListBox,
-    Switch,
-    Button,
-    toast
-} from "@heroui/react";
-import { Briefcase, Globe } from "@gravity-ui/icons";
-import { createJobs } from "@/lib/actions";
-import { redirect } from "next/navigation";
+import { useRef, useState } from "react";
 
-export default function PostJobPage() {
-    // স্ট্যাটিক রিক্রুটার কোম্পানি ডেটা
-    const [mockCompany] = useState({
-        name: "Acme Corp (Auto-filled)",
-        id: "company_123",
-        isApproved: true,
-    });
+const mockCompany = {
+    isApproved: true, 
+};
 
-    const [isRemote, setIsRemote] = useState(false);
-    const [errors, setErrors] = useState({});
+export default function CompanyPage() {
+    const fileInputRef = useRef(null);
+    const [fileName, setFileName] = useState("Upload logo");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,257 +20,194 @@ export default function PostJobPage() {
 
         const formData = new FormData(e.currentTarget);
         const data = Object.fromEntries(formData.entries());
-
-        // ক্লায়েন্ট সাইড ভ্যালিডেশন চেক
-        const newErrors = {};
-        if (!data.jobTitle) newErrors.jobTitle = "Job title is required";
-        if (!data.jobCategory) newErrors.jobCategory = "Job category is required";
-        if (!data.jobType) newErrors.jobType = "Job type is required";
-        if (!data.minSalary) newErrors.minSalary = "Minimum salary is required";
-        if (!data.maxSalary) newErrors.maxSalary = "Maximum salary is required";
-        if (!isRemote && !data.location) newErrors.location = "Location is required for non-remote roles";
-        if (!data.deadline) newErrors.deadline = "Application deadline is required";
-        if (!data.responsibilities) newErrors.responsibilities = "Responsibilities are required";
-        if (!data.requirements) newErrors.requirements = "Requirements are required";
-
-        if (Object.keys(newErrors).length > 0) {
-            console.log("Validation errors:", newErrors);
-            setErrors(newErrors);
-            return;
-        }
-
-        setErrors({});
-
-        // স্ট্যাটিক পেডলোড যা কনসোলে প্রিন্ট হবে
-        const payload = {
-            ...data,
-            isRemote,
-            companyId: mockCompany.id,
-            status: "active",
-            isPubliclyVisible: true,
-        };
-
-        // ফর্মের ডেটা কনসোলে দেখার জন্য
-        console.log("--- Static Form Submitted Successfully ---");
-        // console.log(payload);
-
-        const res = await createJobs(payload)
-        if(res.insertedId){
-        toast.success("Job posted successfully! Check your browser console to see the data.");
-        
-        // ফর্ম রিসেট
-        e.target.reset();
-        setIsRemote(false);
-        redirect('/dashboard/recruiter')
-        }
-        
-        
+        console.log("Submitted Company Data:", data);
     };
 
-    // ডার্ক ইউআই স্টাইলস 
-    const textInputClass = "w-full text-white bg-[#1c1c1e] border border-zinc-800 hover:bg-[#242426] focus:border-zinc-600 rounded-lg h-12 px-3 text-sm placeholder:text-zinc-600 outline-none transition-all";
-    const textAreaClass = "w-full text-white bg-[#1c1c1e] border border-zinc-800 hover:bg-[#242426] focus:border-zinc-600 rounded-lg p-3 text-sm placeholder:text-zinc-600 outline-none transition-all";
-    const selectBoxClass = "w-full";
-    const triggerClasses = "w-full flex items-center justify-between bg-[#1c1c1e] border border-zinc-800 hover:bg-[#242426] h-12 rounded-lg px-3 text-white transition-all text-sm outline-none data-[focused=true]:border-zinc-600 data-[invalid=true]:border-danger";
-    const popoverClasses = "bg-[#1c1c1e] border border-zinc-800 text-white rounded-lg shadow-xl p-1";
-    const listItemClasses = "flex items-center justify-between p-2 rounded-md hover:bg-zinc-800 cursor-pointer text-sm text-zinc-200 outline-none data-[focused=true]:bg-zinc-800";
+    const handleFileChange = (e) => {
+        if (e.target.files && e.target.files[0]) {
+            setFileName(e.target.files[0].name);
+        }
+    };
+
+    const triggerFileSelect = () => {
+        fileInputRef.current?.click();
+    };
 
     return (
-        <div className="min-h-screen bg-[#0d0d0e] text-white py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto bg-[#121214] border border-zinc-900 rounded-xl p-8 shadow-2xl">
-
-                {/* Form Header */}
-                <div className="border-b border-zinc-800 pb-6 mb-8">
-                    <h1 className="text-2xl font-semibold tracking-tight">Post a New Job (Static Demo)</h1>
-                    <p className="text-zinc-400 text-sm mt-1">
-                        Fill out the details below. Submitting will log data to the console.
-                    </p>
-
-                    <div className="mt-4 inline-flex items-center gap-2 bg-zinc-900/50 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-400">
-                        <Briefcase size={14} className="text-zinc-500" />
-                        Posting as: <span className="font-semibold text-zinc-300">{mockCompany.name}</span>
-                        <span className="text-emerald-500 font-medium bg-emerald-950/30 px-1.5 py-0.5 rounded border border-emerald-900/50">Approved</span>
+        <div className="min-h-screen bg-[#090a0c] flex items-center justify-center p-4 antialiased text-[#e2e8f0]">
+            {/* Modal Container */}
+            <div className="w-full max-w-[560px] bg-[#121214] border border-[#222224] rounded-xl shadow-2xl relative overflow-hidden">
+                
+                {/* Header */}
+                <div className="pt-6 px-6 pb-4 flex justify-between items-start">
+                    <div>
+                        <h2 className="text-xl font-semibold text-white tracking-tight">
+                            Register New Company
+                        </h2>
+                        <p className="text-xs text-gray-400 mt-1">
+                            Enter your business details to start hiring on HireLoop.
+                        </p>
                     </div>
+                    <button type="button" className="text-gray-400 hover:text-white transition-colors p-1 rounded-md hover:bg-[#1c1c1e]">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
 
-                {/* Main Form Handler */}
-                <Form onSubmit={handleSubmit} className="space-y-8" validationErrors={errors} validationBehavior='aria'>
-
-                    {/* SECTION 1: Job Information */}
-                    <Fieldset className="space-y-6 w-full">
-                        <legend className="text-lg font-medium text-zinc-300 border-b border-zinc-900 w-full pb-2 mb-2">
-                            Job Information
-                        </legend>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <TextField name="jobTitle" isInvalid={!!errors.jobTitle} className="flex flex-col gap-1 w-full">
-                                <Label className="text-zinc-400 font-medium text-sm">Job Title</Label>
-                                <Input placeholder="e.g. Senior Frontend Engineer" className={textInputClass} />
-                                {errors.jobTitle && <FieldError className="text-xs text-danger mt-1">{errors.jobTitle}</FieldError>}
-                            </TextField>
-
-                            <Select className={selectBoxClass} name="jobCategory" isInvalid={!!errors.jobCategory}>
-                                <Label className="text-zinc-400 font-medium text-sm mb-1 block">Job Category</Label>
-                                <Select.Trigger className={triggerClasses}>
-                                    <Select.Value className="text-white placeholder:text-zinc-600" />
-                                    <Select.Indicator />
-                                </Select.Trigger>
-                                {errors.jobCategory && <span className="text-xs text-danger mt-1">{errors.jobCategory}</span>}
-                                <Select.Popover className={popoverClasses}>
-                                    <ListBox className="outline-none">
-                                        <ListBox.Item id="technology" className={listItemClasses} textValue="Technology">Technology</ListBox.Item>
-                                        <ListBox.Item id="design" className={listItemClasses} textValue="Design">Design</ListBox.Item>
-                                        <ListBox.Item id="marketing" className={listItemClasses} textValue="Marketing">Marketing</ListBox.Item>
-                                        <ListBox.Item id="sales" className={listItemClasses} textValue="Sales">Sales</ListBox.Item>
-                                    </ListBox>
-                                </Select.Popover>
-                            </Select>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <Select className={selectBoxClass} name="jobType" isInvalid={!!errors.jobType}>
-                                <Label className="text-zinc-400 font-medium text-sm mb-1 block">Job Type</Label>
-                                <Select.Trigger className={triggerClasses}>
-                                    <Select.Value />
-                                    <Select.Indicator />
-                                </Select.Trigger>
-                                {errors.jobType && <span className="text-xs text-danger mt-1">{errors.jobType}</span>}
-                                <Select.Popover className={popoverClasses}>
-                                    <ListBox className="outline-none">
-                                        <ListBox.Item id="full-time" className={listItemClasses} textValue="Full-time">Full-time</ListBox.Item>
-                                        <ListBox.Item id="part-time" className={listItemClasses} textValue="Part-time">Part-time</ListBox.Item>
-                                        <ListBox.Item id="contract" className={listItemClasses} textValue="Contract">Contract</ListBox.Item>
-                                        <ListBox.Item id="internship" className={listItemClasses} textValue="Internship">Internship</ListBox.Item>
-                                    </ListBox>
-                                </Select.Popover>
-                            </Select>
-
-                            <div className="grid grid-cols-3 gap-2">
-                                <div className="col-span-2 space-y-1">
-                                    <span className="text-zinc-400 font-medium text-sm block">Salary Range</span>
-                                    <div className="flex gap-2">
-                                        <TextField name="minSalary" isInvalid={!!errors.minSalary} className="w-full">
-                                            <Input placeholder="Min" type="number" className={textInputClass} />
-                                        </TextField>
-                                        <TextField name="maxSalary" isInvalid={!!errors.maxSalary} className="w-full">
-                                            <Input placeholder="Max" type="number" className={textInputClass} />
-                                        </TextField>
-                                    </div>
-                                </div>
-
-                                <Select className="w-full mt-6" name="currency" defaultSelectedKeys={["USD"]}>
-                                    <Select.Trigger className={triggerClasses}>
-                                        <Select.Value />
-                                        <Select.Indicator />
-                                    </Select.Trigger>
-                                    <Select.Popover className={popoverClasses}>
-                                        <ListBox className="outline-none">
-                                            <ListBox.Item id="USD" className={listItemClasses} textValue="USD">USD ($)</ListBox.Item>
-                                            <ListBox.Item id="EUR" className={listItemClasses} textValue="EUR">EUR (€)</ListBox.Item>
-                                            <ListBox.Item id="GBP" className={listItemClasses} textValue="GBP">GBP (£)</ListBox.Item>
-                                        </ListBox>
-                                    </Select.Popover>
-                                </Select>
+                {/* Form */}
+                <form onSubmit={handleSubmit}>
+                    <div className="px-6 pb-6 space-y-4">
+                        
+                        {/* Row 1: Name & Industry */}
+                        <div className="grid grid-cols-2 gap-x-4">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-gray-300">Company Name</label>
+                                <input
+                                    type="text"
+                                    name="companyName"
+                                    placeholder="e.g. Acme Corp"
+                                    className="w-full px-3 py-2 bg-[#1c1c1e] border border-[#2e2e30] rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-colors"
+                                />
                             </div>
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                            <div className="space-y-2">
-                                <div className="flex items-center justify-between mb-1">
-                                    <span className="text-zinc-400 font-medium text-sm">Location</span>
-
-                                    <Switch
-                                        isSelected={isRemote}
-                                        onChange={setIsRemote}
-                                        size="sm"
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-gray-300">Industry / Category</label>
+                                <div className="relative">
+                                    <select
+                                        name="industry"
+                                        defaultValue="Technology"
+                                        className="w-full px-3 py-2 bg-[#1c1c1e] border border-[#2e2e30] rounded-lg text-sm text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer"
                                     >
-                                        <Switch.Control className="bg-zinc-800 data-[selected=true]:bg-white">
-                                            <Switch.Thumb className="bg-zinc-400 data-[selected=true]:bg-black" />
-                                        </Switch.Control>
-                                        <Switch.Content>
-                                            <Label className="text-xs text-zinc-400 font-medium">Remote</Label>
-                                        </Switch.Content>
-                                    </Switch>
-                                </div>
-
-                                <TextField name="location" isInvalid={!isRemote && !!errors.location} className="flex flex-col gap-1 w-full relative">
-                                    <div className="relative flex items-center">
-                                        <Globe size={16} className="absolute left-3 text-zinc-600 pointer-events-none z-10" />
-                                        <Input
-                                            name="location"
-                                            placeholder={isRemote ? "Global / Remote" : "e.g. Austin, TX"}
-                                            disabled={isRemote}
-                                            className={`${textInputClass} pl-10`}
-                                        />
+                                        <option value="Technology">Technology</option>
+                                        <option value="Garments">Garments</option>
+                                        <option value="Startup">Startup</option>
+                                        <option value="Agency">Agency</option>
+                                    </select>
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                        </svg>
                                     </div>
-                                    {!isRemote && errors.location && <FieldError className="text-xs text-danger mt-1">{errors.location}</FieldError>}
-                                </TextField>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Row 2: Website & Location */}
+                        <div className="grid grid-cols-2 gap-x-4">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-gray-300">Website URL</label>
+                                <div className="flex rounded-lg overflow-hidden border border-[#2e2e30] bg-[#1c1c1e] focus-within:border-blue-500 transition-colors">
+                                    <span className="bg-[#2a2a2c] text-xs font-medium text-gray-400 px-3 flex items-center select-none border-r border-[#2e2e30]">
+                                        https://
+                                    </span>
+                                    <input
+                                        type="text"
+                                        name="website"
+                                        placeholder="www.company.com"
+                                        className="w-full px-3 py-2 bg-transparent text-sm text-white placeholder-gray-600 focus:outline-none"
+                                    />
+                                </div>
                             </div>
 
-                            <TextField name="deadline" isInvalid={!!errors.deadline} className="flex flex-col gap-1 w-full">
-                                <Label className="text-zinc-400 font-medium text-sm">Application Deadline</Label>
-                                <Input type="date" className={textInputClass} />
-                                {errors.deadline && <FieldError className="text-xs text-danger mt-1">{errors.deadline}</FieldError>}
-                            </TextField>
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-gray-300">Location</label>
+                                <div className="relative flex items-center">
+                                    <span className="absolute left-3 text-gray-400 pointer-events-none">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        </svg>
+                                    </span>
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        placeholder="City, Country"
+                                        className="w-full pl-9 pr-3 py-2 bg-[#1c1c1e] border border-[#2e2e30] rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-colors"
+                                    />
+                                </div>
+                            </div>
                         </div>
-                    </Fieldset>
 
-                    {/* SECTION 2: Job Description */}
-                    <Fieldset className="space-y-6 w-full">
-                        <legend className="text-lg font-medium text-zinc-300 border-b border-zinc-900 w-full pb-2 mb-2">
-                            Job Details & Description
-                        </legend>
+                        {/* Row 3: Employee Count & Company Logo */}
+                        <div className="grid grid-cols-2 gap-x-4 items-end">
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-gray-300">Employee Count Range</label>
+                                <div className="relative">
+                                    <select
+                                        name="employeeRange"
+                                        defaultValue="1-10 employees"
+                                        className="w-full px-3 py-2 bg-[#1c1c1e] border border-[#2e2e30] rounded-lg text-sm text-white focus:outline-none focus:border-blue-500 transition-colors appearance-none cursor-pointer"
+                                    >
+                                        <option value="1-10 employees">1-10 employees</option>
+                                        <option value="10-50 employees">10-50 employees</option>
+                                        <option value="50-200 employees">50-200 employees</option>
+                                        <option value="200+ employees">200+ employees</option>
+                                    </select>
+                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-400">
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <TextField name="responsibilities" isInvalid={!!errors.responsibilities} className="flex flex-col gap-1 w-full">
-                            <Label className="text-zinc-400 font-medium text-sm">Responsibilities</Label>
-                            <TextArea
-                                name="responsibilities"
-                                placeholder="Outline the core everyday responsibilities for this role..."
+                            <div className="flex flex-col gap-1.5">
+                                <label className="text-xs font-medium text-gray-300">Company Logo</label>
+                                <input
+                                    type="file"
+                                    name="logo"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                    accept="image/png, image/jpeg"
+                                    className="hidden"
+                                />
+                                <div 
+                                    onClick={triggerFileSelect}
+                                    className="flex items-center gap-3 cursor-pointer group"
+                                >
+                                    {/* Upload Square Box */}
+                                    <div className="w-11 h-11 bg-[#1c1c1e] border border-[#2e2e30] border-dashed rounded-lg text-gray-400 flex items-center justify-center flex-shrink-0 group-hover:bg-[#252528] group-hover:border-gray-500 transition-colors">
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                                        </svg>
+                                    </div>
+                                    <div className="text-left leading-tight overflow-hidden">
+                                        <p className="text-xs font-medium text-gray-200 truncate">{fileName}</p>
+                                        <p className="text-[10px] text-gray-500 mt-0.5">PNG, JPG, Max 5MB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Row 4: Full Width Brief Description */}
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-xs font-medium text-gray-300">Brief Description</label>
+                            <textarea
+                                name="description"
                                 rows={4}
-                                className={textAreaClass}
+                                placeholder="Tell us about your company's mission and culture..."
+                                className="w-full px-3 py-2 bg-[#1c1c1e] border border-[#2e2e30] rounded-lg text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-colors resize-none"
                             />
-                            {errors.responsibilities && <FieldError className="text-xs text-danger mt-1">{errors.responsibilities}</FieldError>}
-                        </TextField>
+                        </div>
+                    </div>
 
-                        <TextField name="requirements" isInvalid={!!errors.requirements} className="flex flex-col gap-1 w-full">
-                            <Label className="text-zinc-400 font-medium text-sm">Requirements</Label>
-                            <TextArea
-                                name="requirements"
-                                placeholder="List required experience, skills, and certifications..."
-                                rows={4}
-                                className={textAreaClass}
-                            />
-                            {errors.requirements && <FieldError className="text-xs text-danger mt-1">{errors.requirements}</FieldError>}
-                        </TextField>
-
-                        <TextField name="benefits" className="flex flex-col gap-1 w-full">
-                            <Label className="text-zinc-400 font-medium text-sm">Benefits (Optional)</Label>
-                            <TextArea
-                                name="benefits"
-                                placeholder="Perks, healthcare, equity, remote stipends..."
-                                rows={3}
-                                className={textAreaClass}
-                            />
-                        </TextField>
-                    </Fieldset>
-
-                    {/* Form Actions */}
-                    <div className="flex justify-end gap-3 pt-4 border-t border-zinc-800 w-full">
-                        <Button
+                    {/* Footer Actions */}
+                    <div className="p-4 bg-[#121214] border-t border-[#1c1c1e] flex justify-end gap-2.5">
+                        <button
                             type="button"
-                            variant="bordered"
-                            className="border-zinc-800 text-zinc-300 hover:bg-zinc-900 rounded-lg px-6 font-medium h-11"
+                            className="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 border border-[#2e2e30] hover:bg-[#1c1c1e] hover:text-white transition-colors"
                         >
                             Cancel
-                        </Button>
-                        <Button
+                        </button>
+                        <button
                             type="submit"
-                            className="bg-white text-black font-semibold hover:bg-zinc-200 rounded-lg px-6 transition-colors h-11"
+                            className="px-4 py-2 bg-[#1d61f2] hover:bg-[#1652cf] text-white rounded-lg text-sm font-medium transition-colors shadow-sm"
                         >
-                            Post Job
-                        </Button>
+                            Register Company
+                        </button>
                     </div>
-                </Form>
+                </form>
             </div>
         </div>
     );
