@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 const navLinks = [
     {
         label: "Browse Jobs",
-        href: "/browse-jobs",
+        href: "/jobs",
     },
     {
         label: "Company",

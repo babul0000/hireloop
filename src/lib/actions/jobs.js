@@ -1,8 +1,10 @@
 'use server'
 
-import { serverMutation } from "../core/server";
+import { serverFetch, serverMutation } from "../core/server";
 
-
+// export const getJobs = async () =>{
+//     return serverFetch('/api/jobs');
+// }
 
 
 export const createJob = async (newJobData) => {
