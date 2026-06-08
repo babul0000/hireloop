@@ -4,11 +4,13 @@ import { serverFetch } from "../core/server";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
-export const getJobs = async () =>{
+export const getJobs = async () => {
     return serverFetch('/jobs');
 }
 
 export const getJobById = async (jobId) => {
+    console.log(jobId);
+
     return serverFetch(`/api/jobs/${jobId}`);
 }
 
