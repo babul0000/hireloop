@@ -23,7 +23,7 @@ const navLinks = [
     },
     {
         label: "Pricing",
-        href: "/pricing",
+        href: "/plans",
     },
 ];
 
