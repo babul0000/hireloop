@@ -5,8 +5,9 @@ import React from 'react';
 import JobApply from './JobApply';
 import { getApplicationsByApplicant } from '@/lib/api/applications';
 import Link from 'next/link';
+// Importing a few Gravity UI icons to make it look clean and consistent
 import { ShieldExclamation, CircleInfo, Rocket } from '@gravity-ui/icons';
-// import { getPlanById } from '@/lib/api/plans'; // Commented out
+import { getPlanById } from '@/lib/api/plans';
 
 const ApplyPage = async ({ params }) => {
     const { id } = await params;
@@ -17,6 +18,7 @@ const ApplyPage = async ({ params }) => {
         redirect(`/auth/signin?redirect=/jobs/${id}/apply`);
     }
 
+    // Auth Role Guard Screen
     if (user.role !== 'seeker') {
         return (
             <div className="w-full min-h-[80vh] flex flex-col justify-center items-center text-white p-6">
@@ -41,21 +43,21 @@ const ApplyPage = async ({ params }) => {
 
     const applications = await getApplicationsByApplicant(user.id);
 
-    // --- Hardcoded Limit Configuration ---
-    const MAX_ALLOWED_APPLICATIONS = 3; 
-    // const plan = await getPlanById(user?.plan || 'seeker_free') // Commented out
+    const plan = await getPlanById(user?.plan || 'seeker_free')
     
     const job = await getJobById(id);
 
     const applicationCount = applications?.length || 0;
-    const hasReachedLimit = applicationCount >= MAX_ALLOWED_APPLICATIONS; // Updated to 3
+    const hasReachedLimit = applicationCount >= plan.maxApplicationsPerMonth;
     
-    const usagePercentage = Math.min((applicationCount / MAX_ALLOWED_APPLICATIONS) * 100, 100);
+    // Calculate application usage percentage for a beautiful dynamic progress bar
+    const usagePercentage = Math.min((applicationCount / plan.maxApplicationsPerMonth) * 100, 100);
 
     return (
         <div className="w-full min-h-screen bg-zinc-950 text-zinc-50 py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto space-y-8">
                 
+                {/* 1. Usage & Quota Tracker Card */}
                 <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 shadow-lg">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                         <div>
@@ -63,15 +65,15 @@ const ApplyPage = async ({ params }) => {
                                 Monthly Quota Status
                             </span>
                             <h2 className="text-lg font-bold text-zinc-100 mt-0.5">
-                                You have applied to <span className="text-blue-400">{applicationCount}</span> out of <span className="text-zinc-400">{MAX_ALLOWED_APPLICATIONS}</span> positions
+                                You have applied to <span className="text-blue-400">{applicationCount}</span> out of <span className="text-zinc-400">{plan.maxApplicationsPerMonth}</span> positions
                             </h2>
                         </div>
                         <span className="self-start sm:self-center px-2.5 py-1 text-xs font-medium rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-                            Status: <strong className="text-white font-semibold">Free Tier</strong>
-                            {/* Current Plan: <strong className="text-white font-semibold">{plan.name}</strong> */}
+                            Current Plan: <strong className="text-white font-semibold">{plan.name}</strong>
                         </span>
                     </div>
 
+                    {/* Progress Bar */}
                     <div className="w-full bg-zinc-800 h-2.5 rounded-full overflow-hidden mb-5">
                         <div 
                             className={`h-full transition-all duration-500 rounded-full ${
@@ -81,6 +83,7 @@ const ApplyPage = async ({ params }) => {
                         />
                     </div>
 
+                    {/* Upsell Alert Block */}
                     <div className="flex items-start gap-3 bg-blue-950/30 border border-blue-900/50 rounded-xl p-4 text-sm text-blue-300/90">
                         <Rocket className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
                         <div className="flex-1 sm:flex sm:items-center sm:justify-between gap-4">
@@ -95,17 +98,20 @@ const ApplyPage = async ({ params }) => {
                     </div>
                 </div>
 
+                {/* 2. Form Rendering and Dynamic Limit Enforcement Block */}
                 {hasReachedLimit ? (
+                    /* Lockout State View */
                     <div className="bg-zinc-900/50 border border-dashed border-zinc-800 rounded-2xl p-8 text-center flex flex-col items-center justify-center">
                         <div className="w-10 h-10 bg-zinc-800 text-zinc-400 rounded-full flex items-center justify-center mb-3">
                             <CircleInfo className="w-5 h-5" />
                         </div>
                         <h4 className="text-base font-semibold text-zinc-200">Application Limit Reached</h4>
                         <p className="text-sm text-zinc-500 max-w-sm mt-1">
-                            You have exhausted your free credits (3/3). Upgrade your tier to resume submitting applications immediately.
+                            You have exhausted your free credits for this calendar cycle. Upgrade your tier to resume submitting applications immediately.
                         </p>
                     </div>
                 ) : (
+                    /* Active Form View */
                     <div className="animate-in fade-in-50 duration-300">
                         <JobApply applicant={user} job={job} />
                     </div>

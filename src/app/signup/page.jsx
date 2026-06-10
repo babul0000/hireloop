@@ -33,7 +33,7 @@ export default function SignupPage() {
         setError("");
         setSuccess("");
         setIsLoading(true);
-
+// seeker chek kore ata korte hobe 
         const plan = role === 'seeker' ? 'seeker_free' : 'recruiter_free';
 
         try {

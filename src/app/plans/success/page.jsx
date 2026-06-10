@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 // Gravity UI Icons for a high-quality production finish
 import { CircleCheckFill, Envelope, ArrowLeft } from '@gravity-ui/icons';
-// import { createSubscription } from '@/lib/actions/subscriptions'; // কমেন্ট করা হয়েছে
+import { createSubscription } from '@/lib/actions/subscriptions';
+
 
 export default async function Success({ searchParams }) {
     const { session_id } = await searchParams;
@@ -14,7 +15,7 @@ export default async function Success({ searchParams }) {
     const {
         status,
         customer_details: { email: customerEmail },
-        // metadata // metadata আপাতত ব্যবহারের প্রয়োজন নেই যদি ফাংশনটি কল না করি
+        metadata // metadata আপাতত ব্যবহারের প্রয়োজন নেই যদি ফাংশনটি কল না করি
     } = await stripe.checkout.sessions.retrieve(session_id, {
         expand: ['line_items', 'payment_intent']
     });
@@ -24,14 +25,14 @@ export default async function Success({ searchParams }) {
     }
 
     if (status === 'complete') {
-        /* const subsInfo = {
+        const subsInfo = {
             email: customerEmail,
             planId: metadata.planId
         }
         // update the user table about the new plan
         const result = await createSubscription(subsInfo);
         console.log(result);
-        */
+        
 
         return (
             <div className="w-full min-h-screen bg-zinc-950 text-zinc-50 flex flex-col justify-center items-center p-6 select-none">
