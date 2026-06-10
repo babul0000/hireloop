@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Button, Avatar } from "@heroui/react";
 
 import {
@@ -12,30 +12,63 @@ import {
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
-const navLinks = [
-    {
-        label: "Browse Jobs",
-        href: "/jobs",
-    },
-    {
-        label: "Company",
-        href: "/company",
-    },
-    {
-        label: "Pricing",
-        href: "/plans",
-    },
-];
+// const navLinks = [
+//     {
+//         label: "Browse Jobs",
+//         href: "/jobs",
+//     },
+//     {
+//         label: "Company",
+//         href: "/company",
+//     },
+//     {
+//         label: "Pricing",
+//         href: "/plans",
+//     },
+// ];
+
+// const dashboardLinks = {
+//     seeker: '/dashboard/seeker',
+//     recruiter: '/dashboard/recruiter'
+// }
+
+// if(user?.email){
+//     navLinks.push(
+//         {
+//             label: 'Dashboard',
+//             href: dashboardLinks[user?.role || 'seeker']
+//         }
+//     )
+// }
 
 const Navbar = () => {
     const router = useRouter();
-
-
     const [isOpen, setIsOpen] = useState(false);
 
+    // সেশন থেকে ইউজার ডাটা নেওয়া
     const { data: session } = authClient.useSession();
     const user = session?.user;
-    console.log(user);
+
+    // navLinks কে useMemo এর ভেতরে রাখা হয়েছে যাতে user এর পরিবর্তনের সাথে সাথে এটি আপডেট হয়
+    const navLinks = useMemo(() => {
+        const links = [
+            { label: "Browse Jobs", href: "/jobs" },
+            { label: "Company", href: "/company" },
+            { label: "Pricing", href: "/plans" },
+        ];
+
+        if (user?.email) {
+            const dashboardLinks = {
+                seeker: '/dashboard/seeker',
+                recruiter: '/dashboard/recruiter'
+            };
+            links.push({
+                label: 'Dashboard',
+                href: dashboardLinks[user?.role || 'seeker']
+            });
+        }
+        return links;
+    }, [user]);
 
     const handleSignOut = async () => {
         await authClient.signOut({
