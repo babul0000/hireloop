@@ -1,6 +1,8 @@
 import { getApplicationsByApplicant } from '@/lib/api/applications';
 import { getUserSession } from '@/lib/core/session';
 import React from 'react';
+import ApplicationsTable from './ApplicationsClient';
+
 
 const ApplicationPage = async() => {
     const user = getUserSession()
@@ -8,7 +10,8 @@ const ApplicationPage = async() => {
     console.log(jobs);
     return (
         <div>
-            ApplicationPage: {jobs.length}
+            <ApplicationsTable jobs={jobs}/>
+            {/* ApplicationPage:  */}
         </div>
     );
 };
