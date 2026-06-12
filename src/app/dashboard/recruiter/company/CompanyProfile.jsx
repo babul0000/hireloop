@@ -16,8 +16,6 @@ import {
 } from '@heroui/react';
 import { ArrowUpToLine, Globe, Factory, ArrowRight, Pencil, ChevronDown } from '@gravity-ui/icons';
 import { createCompany } from '@/lib/actions/companies';
-// CHANGE: API import কমেন্ট করে দিচ্ছি (শুধু কনসোল লগের জন্য)
-
 
 // Layout Shared Style Constants matching your design image
 const textInputClass = "w-full bg-zinc-900/50 border border-zinc-800 text-white rounded-lg px-3 py-2.5 outline-none placeholder:text-zinc-600 focus:border-zinc-700 transition";
@@ -64,7 +62,6 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
             if (data.success) {
                 setLogoUrl(data.data.url);
                 setErrors(prev => ({ ...prev, logo: null }));
-                toast.success("Logo uploaded successfully!");
             } else {
                 setErrors(prev => ({ ...prev, logo: "Upload failed. Try again." }));
             }
@@ -75,7 +72,7 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
         }
     };
 
-    // 3. Submit Profile Form Data - CHANGE: API কল বাদ দিয়ে কনসোল লগ করবে
+    // 3. Submit Profile Form Data
     const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -100,7 +97,6 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
 
         // Commit state updates
         const newCompanyData = {
-            _id: company?._id || Date.now().toString(), // CHANGE: temporary ID for demo
             name: companyName,
             websiteUrl,
             industry: industry || 'Technology',
@@ -108,24 +104,22 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
             employeeCount: employeeCount || '1-10 employees',
             description,
             logo: logoUrl || (company ? company.logo : ''),
-            status: company ? company.status : 'Pending',
-            recruiterId: recruiter?.id || 'temp-id' // CHANGE: optional chaining যোগ করলাম
+            status: company && company.status ? company.status : 'Pending', 
+            // Retains status if updating profile details
+            recruiterId: recruiter.id // Associate company with the current recruiter
         }
         setCompany(newCompanyData);
 
         console.log("Submitted Company Profile Data:", newCompanyData);
 
-        // CHANGE: API কল বাদ দিয়ে শুধু সাকসেস মেসেজ দেখাচ্ছি
         const payload = await createCompany(newCompanyData);
+
         if(payload.insertedId) {
+            const savedCompany = {...company, _id: payload.insertedId}
+            setCompany(savedCompany)
             toast.success("Company profile created successfully!");
         }
 
-        // CHANGE: সরাসরি সাকসেস মেসেজ দেখানো
-        toast.success(company ? "Company profile updated successfully!" : "Company profile created successfully!");
-        
-        // CHANGE: লোকাল স্টোরেজে সেভ করা
-        localStorage.setItem('companyProfile', JSON.stringify(newCompanyData));
 
         setErrors({});
         setIsEditing(false);
@@ -139,7 +133,7 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
     };
 
     const startEditing = () => {
-        setLogoUrl(company?.logo || ''); // CHANGE: optional chaining যোগ করলাম
+        setLogoUrl(company.logo);
         setIsEditing(true);
     };
 
@@ -264,11 +258,9 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
                             <Select.Popover className={popoverClasses}>
                                 <ListBox className="outline-none">
                                     <ListBox.Item id="technology" className={listItemClasses} textValue="Technology">Technology</ListBox.Item>
-                                    <ListBox.Item id="healthcare" className={listItemClasses} textValue="Healthcare">Healthcare</ListBox.Item>
+                                    <ListBox.Item id="design" className={listItemClasses} textValue="Design">Design</ListBox.Item>
+                                    <ListBox.Item id="marketing" className={listItemClasses} textValue="Marketing">Marketing</ListBox.Item>
                                     <ListBox.Item id="finance" className={listItemClasses} textValue="Finance">Finance</ListBox.Item>
-                                    <ListBox.Item id="education" className={listItemClasses} textValue="Education">Education</ListBox.Item>
-                                    <ListBox.Item id="retail" className={listItemClasses} textValue="Retail">Retail</ListBox.Item>
-                                    <ListBox.Item id="manufacturing" className={listItemClasses} textValue="Manufacturing">Manufacturing</ListBox.Item>
                                 </ListBox>
                             </Select.Popover>
                         </Select>
@@ -276,8 +268,7 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
 
                     {/* ROW 2: Website URL + Location */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* CHANGE: Linda isInvalid fixed to isInvalid */}
-                        <TextField name="websiteUrl" defaultValue={company?.websiteUrl || ''} isInvalid={!!errors.websiteUrl} className="flex flex-col gap-1 w-full">
+                        <TextField name="websiteUrl" defaultValue={company?.websiteUrl || ''} Linda isInvalid={!!errors.websiteUrl} className="flex flex-col gap-1 w-full">
                             <Label className="text-zinc-400 font-medium text-sm">Website URL</Label>
                             <div className="relative flex items-center">
                                 <span className="absolute left-3 text-zinc-600 text-sm font-medium select-none pointer-events-none border-r border-zinc-800 pr-2">
@@ -311,9 +302,7 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
                                     <ListBox.Item id="1-10" className={listItemClasses} textValue="1-10 employees">1-10 employees</ListBox.Item>
                                     <ListBox.Item id="11-50" className={listItemClasses} textValue="11-50 employees">11-50 employees</ListBox.Item>
                                     <ListBox.Item id="51-200" className={listItemClasses} textValue="51-200 employees">51-200 employees</ListBox.Item>
-                                    <ListBox.Item id="201-500" className={listItemClasses} textValue="201-500 employees">201-500 employees</ListBox.Item>
-                                    <ListBox.Item id="501-1000" className={listItemClasses} textValue="501-1000 employees">501-1000 employees</ListBox.Item>
-                                    <ListBox.Item id="1000+" className={listItemClasses} textValue="1000+ employees">1000+ employees</ListBox.Item>
+                                    <ListBox.Item id="201+" className={listItemClasses} textValue="201+ employees">201+ employees</ListBox.Item>
                                 </ListBox>
                             </Select.Popover>
                         </Select>

@@ -4,7 +4,7 @@ import { Table, Chip, Button, Tooltip } from "@heroui/react";
 
 // Gravity UI Icons
 import { Eye, Pencil, TrashBin } from "@gravity-ui/icons";
-import { getLoggedInRecruiterCompany } from '@/lib/api/companise';
+import { getLoggedInRecruiterCompany } from '@/lib/api/companies';
 
 const RecruiterJobs = async () => {
     // const companyId = 'company_123';

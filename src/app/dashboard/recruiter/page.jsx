@@ -1,19 +1,33 @@
-import JobListingContainer from "@/components/jobs/JobListingContainer";
-import { getJobs } from "@/lib/api/jobs";
+'use client';
+import React from 'react';
+import { useSession } from "@/lib/auth-client";
+import { Briefcase, Persons, Thunderbolt, CircleCheck } from '@gravity-ui/icons';
+import DashboardStats from '@/components/dashboard/DashboardStats';
 
-export default async function Page() {
-  // Fetched server-side on the initial request
-  const jobs = await getJobs();
+const RecruiterDashboardHomePage = () => {
 
-  return (
-    <div className="w-full min-h-screen bg-zinc-950 p-6 md:p-12 text-white">
-      <div className="max-w-7xl mx-auto mb-10">
-        <h1 className="text-4xl font-bold tracking-tight">Open Positions</h1>
-        <p className="text-zinc-400 mt-2">Discover your next engineering challenge.</p>
-      </div>
+    const { data: session, isPending } = useSession();
 
-      {/* Pass data to the Client Wrapper to handle filtering interactivity */}
-      <JobListingContainer initialJobs={jobs || []} />
-    </div>
-  );
-}
+    if (isPending) {
+        return <div>Loading...</div>
+    }
+
+    const recruiterStats = [
+        { title: "Total Job Posts", value: "48", icon: Briefcase },
+        { title: "Total Applicants", value: "1,284", icon: Persons },
+        { title: "Active Jobs", value: "18", icon: Thunderbolt },
+        { title: "Jobs Closed", value: "32", icon: CircleCheck },
+    ];
+
+    const user = session?.user;
+    console.log("Session data in RecruiterDashboardHomePage:", session);
+
+    return (
+        <div>
+            <h2 className="text-4xl">Welcome back, {user?.name}</h2>
+            <DashboardStats statsData={recruiterStats} />
+        </div>
+    );
+};
+
+export default RecruiterDashboardHomePage;

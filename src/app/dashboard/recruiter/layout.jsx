@@ -2,7 +2,7 @@ import { requireRole } from '@/lib/core/session';
 import React from 'react';
 
 const recruiterLayout = async({children}) => {
-    await requireRole('seeker')
+    await requireRole('recruiter')
     return children;
 };
 

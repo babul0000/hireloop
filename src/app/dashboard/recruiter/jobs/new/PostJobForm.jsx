@@ -18,6 +18,7 @@ import {
 import { Briefcase, Globe } from "@gravity-ui/icons";
 import { createJob } from "@/lib/actions/jobs";
 import { redirect } from "next/navigation";
+import { div } from "framer-motion/client";
 
 export default function PostJobForm({ company }) {
     console.log(company, "testing post company");
@@ -106,12 +107,13 @@ export default function PostJobForm({ company }) {
                     <div className="mt-4 inline-flex items-center gap-2 bg-zinc-900/50 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-zinc-400">
                         <Briefcase size={14} className="text-zinc-500" />
                         Posting as: <span className="font-semibold text-zinc-300">{company.name}</span>
-                        <span className="text-emerald-500 font-medium bg-emerald-950/30 px-1.5 py-0.5 rounded border border-emerald-900/50">Approved</span>
+                        <span className="text-emerald-500 font-medium bg-emerald-950/30 px-1.5 py-0.5 rounded border border-emerald-900/50">{company.status}</span>
                     </div>
                 </div>
+                {company.status !== 'approved' && <div>please wait to get approval</div>}
 
                 {/* Hero UI Main Form Handler */}
-                <Form onSubmit={handleSubmit} className="space-y-8" validationErrors={errors} validationBehavior='aria'>
+                { company.status === 'approved' && <Form onSubmit={handleSubmit} className="space-y-8" validationErrors={errors} validationBehavior='aria'>
 
                     {/* SECTION 1: Job Information */}
                     <Fieldset className="space-y-6 w-full">
@@ -285,7 +287,7 @@ export default function PostJobForm({ company }) {
                             Post Job
                         </Button>
                     </div>
-                </Form>
+                </Form>}
             </div>
         </div>
     );
