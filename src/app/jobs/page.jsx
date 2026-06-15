@@ -18,7 +18,7 @@ export default async function Page() {
       </div>
 
       {/* Pass data to the Client Wrapper to handle filtering interactivity */}
-      <JobListingContainer initialJobs={jobs || []} />
+      <JobListingContainer jobs={jobs || []} />
     </div>
   );
 }

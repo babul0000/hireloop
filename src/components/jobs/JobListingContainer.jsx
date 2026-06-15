@@ -1,31 +1,55 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 
 import JobFilters from "@/components/jobs/JobFilters";
 import JobCard from "./jobCard";
+import { useRouter } from "next/navigation";
 
-export default function JobListingContainer({ initialJobs }) {
+export default function JobListingContainer({ jobs }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedType, setSelectedType] = useState("all");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [isRemoteOnly, setIsRemoteOnly] = useState(false);
+    const router = useRouter()
+
+    useEffect(() => {
+        const sp = new URLSearchParams()
+
+        if(searchQuery){
+            sp.set('search', searchQuery)
+        }
+
+        if(selectedType !== 'all'){
+            sp.set('jobType', selectedType)
+        }
+        if(selectedCategory !== 'all'){
+            sp.set('jobCategory', selectedCategory)
+        }
+        if(isRemoteOnly){
+            sp.set('isRemote', true)
+        }
+        console.log('search params', sp.toString());
+        const path = `?${sp.toString()}`
+        router.push(path)
+        
+    }, [router ,selectedType, selectedCategory, isRemoteOnly, searchQuery])
 
     // Compute matched filter rows instantly
-    const filteredJobs = useMemo(() => {
-        return initialJobs.filter((job) => {
-            const matchesSearch =
-                job.jobTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                job.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                job.requirements?.toLowerCase().includes(searchQuery.toLowerCase());
+    // const jobs = useMemo(() => {
+    //     return jobs.filter((job) => {
+    //         const matchesSearch =
+    //             job.jobTitle?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //             job.companyName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    //             job.requirements?.toLowerCase().includes(searchQuery.toLowerCase());
 
-            const matchesType = selectedType === "all" || job.jobType === selectedType;
-            const matchesCategory = selectedCategory === "all" || job.jobCategory === selectedCategory;
-            const matchesRemote = !isRemoteOnly || job.isRemote === true;
+    //         const matchesType = selectedType === "all" || job.jobType === selectedType;
+    //         const matchesCategory = selectedCategory === "all" || job.jobCategory === selectedCategory;
+    //         const matchesRemote = !isRemoteOnly || job.isRemote === true;
 
-            return matchesSearch && matchesType && matchesCategory && matchesRemote;
-        });
-    }, [searchQuery, selectedType, selectedCategory, isRemoteOnly, initialJobs]);
+    //         return matchesSearch && matchesType && matchesCategory && matchesRemote;
+    //     });
+    // }, [searchQuery, selectedType, selectedCategory, isRemoteOnly, jobs]);
 
     return (
         <>
@@ -41,12 +65,12 @@ export default function JobListingContainer({ initialJobs }) {
             />
 
             <div className="max-w-7xl mx-auto mb-6 text-sm text-zinc-500">
-                Showing {filteredJobs.length} position{filteredJobs.length !== 1 && "s"}
+                Showing {jobs.length} position{jobs.length !== 1 && "s"}
             </div>
 
-            {filteredJobs.length > 0 ? (
+            {jobs.length > 0 ? (
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
-                    {filteredJobs.map((jobItem) => (
+                    {jobs.map((jobItem) => (
                         <JobCard
                             key={jobItem._id?.$oid || jobItem._id}
                             job={jobItem}
