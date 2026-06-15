@@ -1,15 +1,23 @@
+
+import AdminUsersTable from '@/components/dashboard/AdminUsersTable';
 import { getUsersList } from '@/lib/api/user';
+
 import React from 'react';
 
-const AdminUserPage = async() => {
-    const users = await getUsersList()
-    console.log(users.users, "admin users");
-    
+
+export default async function AdminUsersPage() {
+    const data = await getUsersList();
+    const users = data?.users || [];
+
     return (
-        <div>
-            <h2>users: {users.users.length}</h2>
+        <div className="min-h-screen bg-[#121212] p-8 text-slate-200">
+            <div className="max-w-7xl mx-auto space-y-4">
+                <h2 className="text-xl font-semibold tracking-tight text-slate-100">
+                    User Management ({users.length})
+                </h2>
+
+                <AdminUsersTable users={users} />
+            </div>
         </div>
     );
-};
-
-export default AdminUserPage;
+}
