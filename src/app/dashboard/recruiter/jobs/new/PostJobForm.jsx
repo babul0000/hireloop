@@ -18,11 +18,8 @@ import {
 import { Briefcase, Globe } from "@gravity-ui/icons";
 import { createJob } from "@/lib/actions/jobs";
 import { redirect } from "next/navigation";
-import { div } from "framer-motion/client";
 
 export default function PostJobForm({ company }) {
-    console.log(company, "testing post company");
-    
     // Mock configuration for recruiter's authenticated state
     // console.log("PostJobForm received company prop:", company);
     // const [company] = useState({
@@ -110,10 +107,11 @@ export default function PostJobForm({ company }) {
                         <span className="text-emerald-500 font-medium bg-emerald-950/30 px-1.5 py-0.5 rounded border border-emerald-900/50">{company.status}</span>
                     </div>
                 </div>
-                {company.status !== 'approved' && <div>please wait to get approval</div>}
+
+                {company.status !== 'Approved' && <div>Please wait to get approval</div>}
 
                 {/* Hero UI Main Form Handler */}
-                { company.status === 'approved' && <Form onSubmit={handleSubmit} className="space-y-8" validationErrors={errors} validationBehavior='aria'>
+                { company.status === 'Approved' && <Form onSubmit={handleSubmit} className="space-y-8" validationErrors={errors} validationBehavior='aria'>
 
                     {/* SECTION 1: Job Information */}
                     <Fieldset className="space-y-6 w-full">

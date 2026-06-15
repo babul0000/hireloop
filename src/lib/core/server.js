@@ -1,5 +1,15 @@
+import { redirect } from "next/navigation";
+import { getSessionToken } from "./session";
 
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || '';
+
+export const authHeader = async () => {
+    const token = await getSessionToken()
+    const header = token ? {
+        authorization: `Bearer ${token}`
+    } : {};
+    return header;
+}
 
 export const serverFetch = async (path) => {
     const url = `${baseUrl}${path}`;
@@ -13,12 +23,22 @@ export const serverFetch = async (path) => {
     return res.json();
 }
 
-export const serverMutation = async (path, data) => {
+export const protectedFetch = async (path) => {
+    const res = await fetch(`${baseUrl}${path}`,
+        {
+            headers: await authHeader()
+        })
+
+    return handleStatus(res);
+}
+
+export const serverMutation = async (path, data, method = 'POST') => {
     const url = `${baseUrl}${path}`;
     const res = await fetch(url, {
-        method: 'POST',
+        method: method,
         headers: {
             'Content-Type': 'application/json',
+            ...await authHeader()
         },
         body: JSON.stringify(data),
     });
@@ -28,5 +48,16 @@ export const serverMutation = async (path, data) => {
         throw new Error(`serverMutation failed: ${res.status} ${res.statusText} - ${text}`);
     }
 
-    return res.json();
+
+    return handleStatus(res);
 };
+
+const handleStatus = res => {
+    if (res.status === 401) {
+        redirect('/unauthorize')
+    }
+    else if (res.status === 403) {
+        redirect('/signin')
+    }
+    return res.json()
+}

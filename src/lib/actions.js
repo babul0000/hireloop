@@ -6,6 +6,8 @@ export const createJobs = async (newJobsData) => {
     return serverMutation('/jobs', newJobsData);
 }
 
+
+
 // const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
 // export const createJobs = async (newJobsData) => {
