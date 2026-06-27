@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import { Card } from "@heroui/react";
 
 import {
