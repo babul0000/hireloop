@@ -5,7 +5,7 @@ import ApplicationsTable from './ApplicationsClient';
 
 
 const ApplicationPage = async() => {
-    const user = getUserSession()
+    const user = await getUserSession()
     const jobs = await getApplicationsByApplicant(user.id);
     console.log(jobs);
     return (

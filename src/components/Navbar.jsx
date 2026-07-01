@@ -45,29 +45,29 @@ const Navbar = () => {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
 
-    // সেশন থেকে ইউজার ডাটা নেওয়া
     const { data: session } = authClient.useSession();
     const user = session?.user;
 
-    // navLinks কে useMemo এর ভেতরে রাখা হয়েছে যাতে user এর পরিবর্তনের সাথে সাথে এটি আপডেট হয়
     const navLinks = useMemo(() => {
         const links = [
             { label: "Browse Jobs", href: "/jobs" },
-            { label: "Company", href: "/company" },
+            { label: "Companies", href: "/jobs" },
             { label: "Pricing", href: "/plans" },
         ];
 
         if (user?.email) {
             const dashboardLinks = {
-                seeker: '/dashboard/seeker',
-                recruiter: '/dashboard/recruiter',
-                admin: '/dashboard/admin'
+                seeker: "/dashboard/seeker",
+                recruiter: "/dashboard/recruiter",
+                admin: "/dashboard/admin",
             };
+
             links.push({
-                label: 'Dashboard',
-                href: dashboardLinks[user?.role || 'seeker']
+                label: "Dashboard",
+                href: dashboardLinks[user?.role || "seeker"],
             });
         }
+
         return links;
     }, [user]);
 
@@ -76,150 +76,112 @@ const Navbar = () => {
             fetchOptions: {
                 onSuccess: () => {
                     router.push("/");
-                }
-            }
+                },
+            },
         });
     };
 
-
-
     return (
-        <nav className="w-full  rounded-xl bg-[#111111] px-4 md:px-6 py-3">
-
-            <div className="flex items-center justify-between">
-
-                {/* Logo */}
-                <Link
-                    href="/"
-                    className="flex items-center gap-2  px-2 py-1 rounded-md"
-                >
-                    <div className="w-9 h-9 rounded-md bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
+        <nav className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#020209]/95 backdrop-blur-xl px-4 py-3 shadow-black/20 md:px-6">
+            <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+                <Link href="/" className="flex items-center gap-3 rounded-2xl px-3 py-2 transition hover:bg-white/5">
+                    <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-violet-600 shadow-lg shadow-fuchsia-500/20">
                         <Code className="text-white w-5 h-5" />
                     </div>
-
-                    <div className="leading-[1]">
-                        <h2 className="text-white text-[18px] font-semibold">
-                            Hiring
-                        </h2>
-
-                        <p className="text-white text-[15px] font-medium">
-                            Loop
-                        </p>
+                    <div className="space-y-0.5">
+                        <p className="text-sm font-semibold text-white">HiringLoop</p>
+                        <p className="text-xs text-slate-400">AI hiring marketplace</p>
                     </div>
                 </Link>
 
-                {/* Desktop Menu */}
-                <div className="hidden md:flex items-center gap-8 bg-[#222222] px-8 py-4 rounded-md">
-
+                <div className="hidden items-center gap-8 md:flex">
                     {navLinks.map((link) => (
                         <Link
-                            key={link.href}
+                            key={link.label}
                             href={link.href}
-                            className="text-gray-300 text-sm hover:text-white transition"
+                            className="text-sm font-medium text-slate-300 transition hover:text-white"
                         >
                             {link.label}
                         </Link>
                     ))}
-
-                    {/* Divider */}
-                    <div className="w-[1px] h-5 bg-gray-600" />
-
-                    {
-                        user ? (
-                            <div className="flex items-center gap-3">
-
-                                {/* Avatar */}
-                                <Avatar className="h-11 w-11 border border-white/10">
-                                    <Avatar.Image
-                                        alt={user?.name}
-                                        src={
-                                            user?.image ||
-                                            "https://img.heroui.chat/image/avatar?w=400&h=400&u=3"
-                                        }
-                                    />
-
-                                    <Avatar.Fallback>
-                                        {user?.name?.slice(0, 2).toUpperCase()}
-                                    </Avatar.Fallback>
-                                </Avatar>
-
-                                {/* Sign Out Button */}
-                                <Button
-                                    onClick={handleSignOut}
-                                    variant="danger"
-                                    className="rounded-xl"
-                                >
-                                    Sign Out
-                                </Button>
-                            </div>
-                        ) : (
-                            <Link
-                                href="/signin"
-                                className="text-sm font-medium text-[#7C3AED] transition hover:text-purple-400"
-                            >
-                                Sign In
-                            </Link>
-                        )
-                    }
-
-                    <Button
-                        radius="md"
-                        className="bg-white text-black font-semibold px-5"
-                    >
-                        Get Started
-                    </Button>
                 </div>
 
-                {/* Mobile Menu Button */}
+                <div className="hidden items-center gap-3 md:flex">
+                    {user ? (
+                        <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-3 py-2">
+                            <Avatar className="h-10 w-10 border border-white/10 bg-slate-950">
+                                <Avatar.Image
+                                    alt={user?.name}
+                                    src={user?.image || "https://img.heroui.chat/image/avatar?w=400&h=400&u=3"}
+                                />
+                                <Avatar.Fallback>{user?.name?.slice(0, 2).toUpperCase()}</Avatar.Fallback>
+                            </Avatar>
+                            <Button onClick={handleSignOut} radius="lg" className="bg-white text-black px-4 py-2 font-semibold">
+                                Sign Out
+                            </Button>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-3">
+                            <Link href="/signin" className="text-sm font-medium text-slate-300 transition hover:text-white">
+                                Sign In
+                            </Link>
+                            <Link href="/signup" className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition hover:bg-slate-200">
+                                Get Started
+                            </Link>
+                        </div>
+                    )}
+                </div>
+
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="md:hidden text-white"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white transition hover:bg-white/10 md:hidden"
+                    aria-label="Toggle navigation"
                 >
-                    {
-                        isOpen
-                            ? <Xmark className="w-6 h-6" />
-                            : <Bars className="w-6 h-6" />
-                    }
+                    {isOpen ? <Xmark className="h-5 w-5" /> : <Bars className="h-5 w-5" />}
                 </button>
             </div>
 
-            {/* Mobile Menu */}
-            {
-                isOpen && (
-                    <div className="md:hidden mt-4 border border-dashed border-[#1E90FF] rounded-xl p-5 space-y-5">
+            {isOpen && (
+                <div className="mt-4 rounded-3xl border border-white/10 bg-[#070712]/95 p-5 shadow-xl shadow-black/20 backdrop-blur-xl md:hidden">
+                    <div className="space-y-3">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.label}
+                                href={link.href}
+                                className="block rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </div>
 
-                        {
-                            navLinks.map((link) => (
+                    <div className="mt-4 border-t border-white/10 pt-4">
+                        {user ? (
+                            <Button onClick={handleSignOut} radius="lg" className="w-full bg-white text-black">
+                                Sign Out
+                            </Button>
+                        ) : (
+                            <div className="space-y-3">
                                 <Link
-                                    key={link.href}
-                                    href={link.href}
-                                    className="block text-gray-300 hover:text-white transition"
+                                    href="/signin"
+                                    className="block rounded-2xl px-4 py-3 text-center text-sm font-medium text-slate-300 transition hover:bg-white/5 hover:text-white"
                                     onClick={() => setIsOpen(false)}
                                 >
-                                    {link.label}
+                                    Sign In
                                 </Link>
-                            ))
-                        }
-
-                        <div className="w-full h-[1px] bg-gray-700" />
-
-                        <Link
-                            href="/signin"
-                            className="block text-[#7C3AED] font-medium hover:text-purple-400 transition"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            Sign In
-                        </Link>
-
-                        <Button
-                            radius="md"
-                            className="w-full bg-white text-black font-semibold"
-                        >
-                            Get Started
-                        </Button>
+                                <Link
+                                    href="/signup"
+                                    className="block rounded-2xl bg-white px-4 py-3 text-center text-sm font-semibold text-black transition hover:bg-slate-200"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    Get Started
+                                </Link>
+                            </div>
+                        )}
                     </div>
-                )
-            }
+                </div>
+            )}
         </nav>
     );
 };

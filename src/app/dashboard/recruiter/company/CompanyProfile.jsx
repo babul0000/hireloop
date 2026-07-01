@@ -15,7 +15,7 @@ import {
     toast
 } from '@heroui/react';
 import { ArrowUpToLine, Globe, Factory, ArrowRight, Pencil, ChevronDown } from '@gravity-ui/icons';
-import { createCompany } from '@/lib/actions/companies';
+import { createCompany, updateCompany } from '@/lib/actions/companies';
 
 // Layout Shared Style Constants matching your design image
 const textInputClass = "w-full bg-zinc-900/50 border border-zinc-800 text-white rounded-lg px-3 py-2.5 outline-none placeholder:text-zinc-600 focus:border-zinc-700 transition";
@@ -112,7 +112,9 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
 
         console.log("Submitted Company Profile Data:", newCompanyData);
 
-        const payload = await createCompany(newCompanyData);
+        const payload = company?._id 
+            ? await updateCompany(company._id, newCompanyData) 
+            : await createCompany(newCompanyData);
 
         if(payload.insertedId) {
             const savedCompany = {...company, _id: payload.insertedId}
@@ -268,7 +270,7 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
 
                     {/* ROW 2: Website URL + Location */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <TextField name="websiteUrl" defaultValue={company?.websiteUrl || ''} Linda isInvalid={!!errors.websiteUrl} className="flex flex-col gap-1 w-full">
+                        <TextField name="websiteUrl" defaultValue={company?.websiteUrl || ''} isInvalid={!!errors.websiteUrl} className="flex flex-col gap-1 w-full">
                             <Label className="text-zinc-400 font-medium text-sm">Website URL</Label>
                             <div className="relative flex items-center">
                                 <span className="absolute left-3 text-zinc-600 text-sm font-medium select-none pointer-events-none border-r border-zinc-800 pr-2">

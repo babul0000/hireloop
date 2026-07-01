@@ -11,25 +11,15 @@ import {
   Star,
 } from "@gravity-ui/icons";
 
-// Feature Card Component
 const FeatureCard = ({ icon: Icon, title, description }) => {
   return (
-    <div className="group flex items-start gap-4 rounded-2xl p-4 transition-all duration-300 hover:bg-white/[0.03] hover:-translate-y-1">
-      
-      {/* Icon Box */}
-      <div className="flex h-14 w-14 min-h-[56px] min-w-[56px] items-center justify-center rounded-xl border border-[#222] bg-gradient-to-b from-[#111] to-[#0a0a0a] text-fuchsia-400 shadow-inner transition-all duration-300 group-hover:border-fuchsia-500/30 group-hover:text-fuchsia-300">
-        <Icon size={20} />
+    <div className="group flex flex-col gap-5 rounded-[28px] border border-white/10 bg-white/5 p-6 transition duration-300 hover:-translate-y-1 hover:border-fuchsia-400/30 hover:bg-white/10">
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-fuchsia-500/15 to-violet-500/10 text-fuchsia-300 shadow-lg shadow-fuchsia-500/10">
+        <Icon size={24} />
       </div>
-
-      {/* Content */}
-      <div className="pt-1">
-        <h3 className="text-[17px] font-medium tracking-wide text-slate-100">
-          {title}
-        </h3>
-
-        <p className="mt-1.5 max-w-xs text-[14px] leading-relaxed text-slate-400">
-          {description}
-        </p>
+      <div>
+        <h3 className="text-lg font-semibold text-white">{title}</h3>
+        <p className="mt-3 text-sm leading-7 text-slate-400">{description}</p>
       </div>
     </div>
   );
@@ -80,36 +70,32 @@ export default function FeaturesGrid() {
   ];
 
   return (
-    <section className="bg-[#0b0b0c] px-6 py-20 text-white">
-      
-      {/* Header */}
-      <div className="mb-16 flex flex-col items-center text-center">
-        
-        <div className="mb-5 flex items-center gap-2 rounded-full border border-indigo-900/30 bg-indigo-950/20 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-indigo-400">
-          <span className="h-1.5 w-1.5 rounded-sm bg-indigo-500"></span>
-
-          FEATURES JOB
-
-          <span className="h-1.5 w-1.5 rounded-sm bg-indigo-500"></span>
+    <section className="bg-[#050507] px-6 py-20 text-white sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-7xl">
+        <div className="mb-14 text-center">
+          <div className="mx-auto mb-5 inline-flex items-center gap-3 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-2 text-[11px] uppercase tracking-[0.28em] text-violet-300">
+            <span className="block h-2.5 w-2.5 rounded-full bg-violet-400" />
+            FEATURE HIGHLIGHTS
+            <span className="block h-2.5 w-2.5 rounded-full bg-violet-400" />
+          </div>
+          <h2 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            Everything you need to succeed.
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-400 sm:text-lg">
+            Powerful recruiting tools, meaningful insights, and the career support you need to move faster.
+          </p>
         </div>
 
-        <h2 className="max-w-2xl text-4xl font-semibold leading-tight tracking-tight text-slate-100 md:text-5xl">
-          Everything you need
-          <br />
-          to succeed
-        </h2>
-      </div>
-
-      {/* Grid */}
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-        {features.map((feature, index) => (
-          <FeatureCard
-            key={index}
-            icon={feature.icon}
-            title={feature.title}
-            description={feature.description}
-          />
-        ))}
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {features.map((feature, index) => (
+            <FeatureCard
+              key={index}
+              icon={feature.icon}
+              title={feature.title}
+              description={feature.description}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

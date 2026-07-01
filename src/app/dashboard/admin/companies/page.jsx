@@ -9,6 +9,7 @@ const AdminCompaniesPage = async () => {
     
     return (
         <div className="min-h-screen bg-[#0d0d0f] p-8 text-neutral-100">
+            
             <div className="max-w-7xl mx-auto space-y-6">
                 <div>
                     <h2 className="text-xl font-semibold tracking-tight text-neutral-200">

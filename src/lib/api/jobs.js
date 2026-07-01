@@ -5,7 +5,11 @@ import { serverFetch } from "../core/server";
 const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL;
 
 export const getJobs = async ({queryString}) => {
-    return serverFetch(`/jobs?${queryString}`);
+    const res = await serverFetch(`/jobs?${queryString}`);
+    if (Array.isArray(res)) {
+        return { jobs: res, total: res.length };
+    }
+    return res || { jobs: [], total: 0 };
 }
 
 export const getJobById = async (jobId) => {

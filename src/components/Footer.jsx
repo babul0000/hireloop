@@ -10,169 +10,87 @@ import {
 } from "@gravity-ui/icons";
 
 const productLinks = [
-    "Job discovery",
-    "Worker AI",
-    "Companies",
-    "Salary data",
+    { label: "Job discovery", href: "/jobs" },
+    { label: "Recruiter tools", href: "/dashboard/recruiter" },
+    { label: "Salary data", href: "/plans" },
+    { label: "Resume help", href: "/" },
 ];
 
 const navigationLinks = [
-    "Help center",
-    "Career library",
-    "Contact",
+    { label: "Help center", href: "/" },
+    { label: "Career library", href: "/" },
+    { label: "Contact", href: "/" },
 ];
 
 const resourceLinks = [
-    "Brand Guideline",
-    "Newsroom",
+    { label: "Brand guideline", href: "/" },
+    { label: "Newsroom", href: "/" },
 ];
 
 const Footer = () => {
     return (
-        <footer className="w-full bg-black px-6 md:px-12 lg:px-16 py-14 text-white">
-
-            {/* Top Section */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-
-                {/* Left Side */}
+        <footer className="w-full bg-[#03040a] px-6 py-14 text-white md:px-12 lg:px-16">
+            <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl shadow-black/20 backdrop-blur-xl md:grid-cols-2 lg:grid-cols-4">
                 <div className="space-y-6">
-
-                    {/* Logo */}
-                    <Link
-                        href="/"
-                        className="inline-flex items-center gap-2"
-                    >
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
+                    <Link href="/" className="inline-flex items-center gap-3 rounded-3xl px-3 py-2 transition hover:bg-white/5">
+                        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-fuchsia-500 to-violet-600 shadow-lg shadow-fuchsia-500/20">
                             <Code className="w-5 h-5 text-white" />
                         </div>
-
-                        <div className="leading-[1]">
-                            <h2 className="text-white text-[20px] font-semibold">
-                                Hiring
-                            </h2>
-
-                            <p className="text-white text-[17px] font-medium">
-                                Loop
-                            </p>
+                        <div>
+                            <h2 className="text-lg font-semibold text-white">HiringLoop</h2>
+                            <p className="text-sm text-slate-400">AI hiring marketplace</p>
                         </div>
                     </Link>
-
-                    {/* Description */}
-                    <p className="text-[#8B8B8B] text-[15px] leading-7 max-w-[300px]">
-                        The AI-native career platform. Built for
-                        people who take their work seriously.
+                    <p className="max-w-sm text-sm leading-7 text-slate-400">
+                        Empowering ambitious professionals and modern hiring teams with smart matches, company insights, and faster growth.
                     </p>
-
-                    {/* Social Icons */}
-                    <div className="flex items-center gap-3 pt-10">
-
-                        <Link
-                            href="https://facebook.com"
-                            target="_blank"
-                            className="w-10 h-10 rounded-lg bg-[#111111] hover:bg-[#1A1A1A] transition flex items-center justify-center"
-                        >
-                            <LogoFacebook className="w-5 h-5 text-white" />
+                    <div className="flex items-center gap-3 pt-4">
+                        <Link href="https://facebook.com" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/5 text-white transition hover:bg-white/10">
+                            <LogoFacebook className="w-5 h-5" />
                         </Link>
-
-                        <Link
-                            href="https://pinterest.com"
-                            target="_blank"
-                            className="w-10 h-10 rounded-lg bg-[#5B4CF0] hover:opacity-90 transition flex items-center justify-center"
-                        >
-                            <LogoGithub className="w-5 h-5 text-white" />
+                        <Link href="https://github.com" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/5 text-white transition hover:bg-white/10">
+                            <LogoGithub className="w-5 h-5" />
                         </Link>
-
-                        <Link
-                            href="https://linkedin.com"
-                            target="_blank"
-                            className="w-10 h-10 rounded-lg bg-[#111111] hover:bg-[#1A1A1A] transition flex items-center justify-center"
-                        >
-                            <LogoLinkedin className="w-5 h-5 text-white" />
+                        <Link href="https://linkedin.com" target="_blank" rel="noreferrer" className="flex h-10 w-10 items-center justify-center rounded-2xl bg-white/5 text-white transition hover:bg-white/10">
+                            <LogoLinkedin className="w-5 h-5" />
                         </Link>
                     </div>
                 </div>
 
-                {/* Product */}
                 <div>
-                    <h3 className="text-[#5B4CF0] font-medium mb-6">
-                        Product
-                    </h3>
-
-                    <div className="space-y-4">
-                        {productLinks.map((item) => (
-                            <Link
-                                key={item}
-                                href="/"
-                                className="block text-[#8B8B8B] hover:text-white transition"
-                            >
-                                {item}
-                            </Link>
-                        ))}
-                    </div>
+                    <h3 className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-fuchsia-400">Product</h3>
+                    <div className="space-y-4">{productLinks.map((link) => (
+                        <Link key={link.label} href={link.href} className="block text-sm text-slate-300 transition hover:text-white">
+                            {link.label}
+                        </Link>
+                    ))}</div>
                 </div>
 
-                {/* Navigations */}
                 <div>
-                    <h3 className="text-[#5B4CF0] font-medium mb-6">
-                        Navigations
-                    </h3>
-
-                    <div className="space-y-4">
-                        {navigationLinks.map((item) => (
-                            <Link
-                                key={item}
-                                href="/"
-                                className="block text-[#8B8B8B] hover:text-white transition"
-                            >
-                                {item}
-                            </Link>
-                        ))}
-                    </div>
+                    <h3 className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-fuchsia-400">Navigate</h3>
+                    <div className="space-y-4">{navigationLinks.map((link) => (
+                        <Link key={link.label} href={link.href} className="block text-sm text-slate-300 transition hover:text-white">
+                            {link.label}
+                        </Link>
+                    ))}</div>
                 </div>
 
-                {/* Resources */}
                 <div>
-                    <h3 className="text-[#5B4CF0] font-medium mb-6">
-                        Resources
-                    </h3>
-
-                    <div className="space-y-4">
-                        {resourceLinks.map((item) => (
-                            <Link
-                                key={item}
-                                href="/"
-                                className="block text-[#8B8B8B] hover:text-white transition"
-                            >
-                                {item}
-                            </Link>
-                        ))}
-                    </div>
+                    <h3 className="mb-6 text-sm font-semibold uppercase tracking-[0.25em] text-fuchsia-400">Resources</h3>
+                    <div className="space-y-4">{resourceLinks.map((link) => (
+                        <Link key={link.label} href={link.href} className="block text-sm text-slate-300 transition hover:text-white">
+                            {link.label}
+                        </Link>
+                    ))}</div>
                 </div>
             </div>
 
-            {/* Bottom */}
-            <div className="border-t border-[#111111] mt-14 pt-8 flex flex-col md:flex-row items-center justify-between gap-5">
-
-                <p className="text-[#777777] text-sm text-center">
-                    Copyright 2024 —Programming Hero
-                </p>
-
-                <div className="flex items-center gap-3 text-sm text-[#777777]">
-                    <Link
-                        href="/"
-                        className="hover:text-white transition"
-                    >
-                        Terms & Policy
-                    </Link>
-
-                    <span>-</span>
-
-                    <Link
-                        href="/"
-                        className="hover:text-white transition"
-                    >
-                        Privacy Guideline
-                    </Link>
+            <div className="mx-auto mt-12 flex max-w-7xl flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-slate-500 md:flex-row">
+                <p className="text-sm">© {new Date().getFullYear()} HiringLoop. Crafted for fast hiring and career growth.</p>
+                <div className="flex flex-wrap items-center justify-center gap-3 text-sm">
+                    <Link href="/" className="transition hover:text-white">Terms of Service</Link>
+                    <span className="text-slate-600">•</span>
+                    <Link href="/" className="transition hover:text-white">Privacy Policy</Link>
                 </div>
             </div>
         </footer>
